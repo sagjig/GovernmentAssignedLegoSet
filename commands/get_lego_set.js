@@ -1,5 +1,7 @@
 const {SlashCommandBuilder} = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
+//const fetch = require("node-fetch");
+const axios = require("axios").default;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,8 +15,11 @@ module.exports = {
     async execute(interaction){
         // TODO: Return an embed message as a response
         const set_number = interaction.options.getInteger
+        const embed = await lookUpAndReturnSet(set_number);
         return await interaction.reply({
-            embeds: [embedTest()],
+            //embeds: [embedTest().setDescription("If you see this description, you can overload stuff here").setTitle("It worked!")],
+            content: "Your government-assigned LEGO set is...", //remove this for this command, this is for the get by discrim
+            embeds: [embed],
             ephemeral: true //Debugging: disable this on deployment
         })
     },
@@ -26,14 +31,49 @@ module.exports = {
  * Returns a Discord embed of a Brickset page, given a set-number
  * @param {*} set_number 
  */
-function lookUpAndReturnSet(set_number){
-    fetch("https://brickset.com/sets/"+set_number).then(function (response){
-        // Successfully returned the Brickset page
-        console.log("Sucessfully pulled HTML page for " + response)
-    }).catch(function (err){
-        // Error in returning page
-        console.error("Could not return Brickset HTML page")
-    })
+async function lookUpAndReturnSet(set_number){
+    const url = ("https://brickset.com/" + "sets/" + set_number);
+    try{
+        
+
+        // Asynchronously wait until you get the page
+        const response = await axios.get(url);
+        if (response.status != 200) { //TODO: Figure out why it never reaches this statement
+            //return Promise.reject(response);
+            throw new Error("Fetched a page, but something went wrong.\n" + response.status + ": " + response.statusText);
+        }
+        console.log("Successfully fetched " + url);
+        const body = await response.data;
+       // console.log(body);
+
+
+    }
+    catch(error){
+        //console.log(error)
+    }
+
+    /**
+       * get the data from the returned HTML page
+       */
+    const returned_set_title = "KANYE";
+    const returned_set_image_url = "https://media-cldnry.s-nbcnews.com/image/upload/newscms/2019_50/1517640/kanye-silver-body-paint-today-main-191209.jpg";
+
+    /**
+     * create the embed message from gathered data
+     */
+    const myEmbed = new MessageEmbed()
+        .setTitle(returned_set_title)
+        .setDescription("")
+        .setImage(returned_set_image_url)
+        .setColor("#E3000B") // LEGO(tm) Red
+        .setFooter({
+            text: "Data from Brickset ltd.", 
+            iconURL: "https://brickset.com/favicon.ico"})
+        .setURL(encodeURI(url));
+
+    return myEmbed;
+
+
 }
 
 function embedTest(){
@@ -43,3 +83,8 @@ function embedTest(){
 
     return myEmbed;
 }
+
+
+/** This runs when running the script */
+//console.log("Debugging for get_lego_set");
+//const myEmbed = lookUpAndReturnSet(4444);
