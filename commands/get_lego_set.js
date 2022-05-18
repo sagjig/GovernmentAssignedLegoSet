@@ -5,11 +5,12 @@ module.exports = {
         .setName("get_lego_set")
         .setDescription("Return LEGO set given a set-number."),
     async execute(interaction){
+        // TODO: Return an embed message as a response
         await interaction.reply("Test response")
     },
 };
 
-
+// TODO: Pull HTML page and embed stuff you need in it so it can be returned to the execution process.
 // TODO: Genericize this method so it can work with sets, parts, and whatever other page followign that specific format
 /**
  * Returns a Discord embed of a Brickset page, given a set-number
