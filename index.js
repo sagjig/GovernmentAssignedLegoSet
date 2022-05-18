@@ -57,7 +57,7 @@ client.login(token);
 
 // Run this when client is ready
 client.once('ready', () => {
-    console.log("Bot is online! [CTRL+C to kill]");
+    console.log("----------------------\nBot is online! [CTRL+C to kill]");
 })
 
 // On an interaction, create an asynchronous process (async-await)
@@ -68,6 +68,7 @@ client.on("interactionCreate", async interaction => {
      //Create a local variable commandName from interaction.commandName
     const commandName = client.commands.get(interaction.commandName)
 
+    // If for whatever reason something gets passed in that isn't a command-name, after the initial check, return null.
     if (!commandName) return;
 
     try{

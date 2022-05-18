@@ -3,10 +3,15 @@ const {SlashCommandBuilder} = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("get_lego_set")
-        .setDescription("Return LEGO set given a set-number."),
+        .setDescription("Return LEGO set given a set-number.")
+        .addStringOption(option =>
+            option.setName("set_number")
+            .setDescription("The set number to look up.")
+            .setRequired(true)),
+            
     async execute(interaction){
         // TODO: Return an embed message as a response
-        await interaction.reply("Test response")
+        return await interaction.reply("Test response")
     },
 };
 
