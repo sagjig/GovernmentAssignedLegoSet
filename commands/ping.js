@@ -6,7 +6,10 @@ module.exports = {
         .setDescription("returns pong!"),
 
     async execute(interaction){
-        return await interaction.reply("pong!");
+        return await interaction.reply({
+            content: "pong!",
+            ephemeral: true //make it ephemeral so we don't flood the chat with PONGs
+        });
     }
 
 }
