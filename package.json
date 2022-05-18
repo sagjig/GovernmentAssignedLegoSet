@@ -1,0 +1,22 @@
+{
+  "name": "governmentassignedlegoset",
+  "version": "1.0.0",
+  "description": "Discord bot that returns the associated LEGO set with your discriminator.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sagjig",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
+    "curl": "^0.1.4",
+    "discord-api-types": "^0.33.0",
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0"
+  }
+}
