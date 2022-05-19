@@ -17,7 +17,7 @@ module.exports = {
             
     async execute(interaction){
         // TODO: Return an embed message as a response
-        const set_number = interaction.options.getInteger
+        const set_number = interaction.options.getInteger("set_number")
         const embed = await lookUpAndReturnSet(set_number);
         return await interaction.reply({
             //embeds: [embedTest().setDescription("If you see this description, you can overload stuff here").setTitle("It worked!")],
@@ -37,39 +37,42 @@ module.exports = {
 async function lookUpAndReturnSet(set_number){
     var response = null;
     const endpoint = "https://brickset.com/api/v3.asmx/getSets";
-    const data = {
-        apiKey: bricksetAPIKey, 
-        //userHash: null,
-        params:"{\"setNumber\":\"" + set_number + "-1\"}" 
-    }
+    
+    
     try{
-        //const combo = endpoint + new URLSearchParams(data);
-        //response = await axios.get(combo);
-        //console.log(combo)
+        const combo = endpoint + "?apiKey=" +bricksetAPIKey + "&userHash=" + "&params=%7B%22setNumber%22%3A%20%22" + set_number +"-1" + "%22%7D";
+        console.log(combo+"\n");
+        response = await axios.get(combo);
+        
 
-        response = await axios.post(endpoint,data); //TODO: Fix this and figure out why I'm getting a 401 error
+        //response = await axios.post(endpoint,data,config) //TODO: Fix this and figure out why I'm getting a 401 error
         //console.log(axios.post(endpoint,data));
 
 
 
     }
     catch(error){
-        console.log(error)
+        console.log(error.message)
     }
 
-    returned_set_title = response.sets[0].name;
+    returned_set_title = getPropertyIfExists("name",response.data.sets[0]);
+    returned_url = response.data.sets[0].bricksetURL;
+    //returned_set_image_url = response.data.sets[0].image.imageURL;
+    returned_set_image_url = getPropertyIfExists("imageURL",response.data.sets[0].image)
+    //returned_desc = response.data.sets[0].extendedData.notes;
+    returned_desc = getPropertyIfExists("notes",response.data.sets[0].extendedData)
     /**
      * create the embed message from gathered data
      */
     const myEmbed = new MessageEmbed()
         .setTitle(returned_set_title)
-        .setDescription("")
+        .setDescription(returned_desc)
         .setImage(returned_set_image_url)
         .setColor("#E3000B") // LEGO(tm) Red
         .setFooter({
             text: "Data from Brickset ltd.", 
             iconURL: "https://brickset.com/favicon.ico"})
-        .setURL(encodeURI(url));
+        .setURL(encodeURI(returned_url));
 
     return myEmbed;
 
@@ -84,7 +87,15 @@ function embedTest(){
     return myEmbed;
 }
 
+function getPropertyIfExists(prop, obj){
+    if(prop in obj){
+        return obj[prop];
+    }
+    return "";
+
+}
+
 
 /** This runs when running the script */
-console.log("Debugging for get_lego_set");
-const myEmbed = lookUpAndReturnSet(4444);
+//console.log("Debugging for get_lego_set");
+//const myEmbed = lookUpAndReturnSet(4444);
