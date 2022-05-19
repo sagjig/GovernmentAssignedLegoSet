@@ -76,7 +76,7 @@ client.on("interactionCreate", async interaction => {
     }
     catch (error){
         console.error(error);
-        await interaction.reply({content: "Error in command execution", ephemeral: true})
+        await interaction.reply({content: error.message, ephemeral: true})
     }
 
 

@@ -23,7 +23,7 @@ module.exports = {
             //embeds: [embedTest().setDescription("If you see this description, you can overload stuff here").setTitle("It worked!")],
             content: "Your government-assigned LEGO set is...", //remove this for this command, this is for the get by discrim
             embeds: [embed],
-            ephemeral: true //Debugging: disable this on deployment
+            //ephemeral: true //Debugging: disable this on deployment
         })
     },
 };
@@ -38,24 +38,21 @@ async function lookUpAndReturnSet(set_number){
     var response = null;
     const endpoint = "https://brickset.com/api/v3.asmx/getSets";
     
-    
-    try{
-        const combo = endpoint + "?apiKey=" +bricksetAPIKey + "&userHash=" + "&params=%7B%22setNumber%22%3A%20%22" + set_number +"-1" + "%22%7D";
-        console.log(combo+"\n");
-        response = await axios.get(combo);
-        
 
-        //response = await axios.post(endpoint,data,config) //TODO: Fix this and figure out why I'm getting a 401 error
-        //console.log(axios.post(endpoint,data));
+ 
+    const combo = endpoint + "?apiKey=" + bricksetAPIKey + "&userHash=" + "&params=%7B%22setNumber%22%3A%20%22" + set_number + "-1" + "%22%7D";
 
+    response = await axios.get(combo);
 
-
-    }
-    catch(error){
-        console.log(error.message)
+    if (response.data.matches == 0) {
+        throw new Error("No set with that number");
     }
 
-    returned_set_title = getPropertyIfExists("name",response.data.sets[0]);
+    if (response.data.status == "error") {
+        throw new Error(response.data.message);
+    }
+
+    returned_set_title = getPropertyIfExists("number",response.data.sets[0]) +" "+ getPropertyIfExists("name",response.data.sets[0]);
     returned_url = response.data.sets[0].bricksetURL;
     //returned_set_image_url = response.data.sets[0].image.imageURL;
     returned_set_image_url = getPropertyIfExists("imageURL",response.data.sets[0].image)
@@ -67,6 +64,11 @@ async function lookUpAndReturnSet(set_number){
     const myEmbed = new MessageEmbed()
         .setTitle(returned_set_title)
         .setDescription(returned_desc)
+/*         .addFields(
+            { name: "Total pieces", value: getPropertyIfExists("pieces",response.data.sets[0]), inline: true },
+            { name: "Price", value: getPropertyIfExists("retailPrice",response.data.sets[0].LEGOCom.US), inline: true },
+            { name: "Year", value: getPropertyIfExists("year",response.data.sets[0]), inline: true }
+        ) */
         .setImage(returned_set_image_url)
         .setColor("#E3000B") // LEGO(tm) Red
         .setFooter({
