@@ -1,7 +1,10 @@
 const {SlashCommandBuilder} = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
+const { bricksetAPIKey } = require("../auth.json");
 //const fetch = require("node-fetch");
 const axios = require("axios").default;
+//const cheerio = require("cheerio");
+//const URLSearchParams = require("urlsearchparams");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -32,32 +35,29 @@ module.exports = {
  * @param {*} set_number 
  */
 async function lookUpAndReturnSet(set_number){
-    const url = ("https://brickset.com/" + "sets/" + set_number);
+    var response = null;
+    const endpoint = "https://brickset.com/api/v3.asmx/getSets";
+    const data = {
+        apiKey: bricksetAPIKey, 
+        //userHash: null,
+        params:"{\"setNumber\":\"" + set_number + "-1\"}" 
+    }
     try{
-        
+        //const combo = endpoint + new URLSearchParams(data);
+        //response = await axios.get(combo);
+        //console.log(combo)
 
-        // Asynchronously wait until you get the page
-        const response = await axios.get(url);
-        if (response.status != 200) { //TODO: Figure out why it never reaches this statement
-            //return Promise.reject(response);
-            throw new Error("Fetched a page, but something went wrong.\n" + response.status + ": " + response.statusText);
-        }
-        console.log("Successfully fetched " + url);
-        const body = await response.data;
-       // console.log(body);
+        response = await axios.post(endpoint,data);
+        //console.log(axios.post(endpoint,data));
+
 
 
     }
     catch(error){
-        //console.log(error)
+        console.log(error)
     }
 
-    /**
-       * get the data from the returned HTML page
-       */
-    const returned_set_title = "KANYE";
-    const returned_set_image_url = "https://media-cldnry.s-nbcnews.com/image/upload/newscms/2019_50/1517640/kanye-silver-body-paint-today-main-191209.jpg";
-
+    returned_set_title = response.sets[0].name;
     /**
      * create the embed message from gathered data
      */
@@ -86,5 +86,5 @@ function embedTest(){
 
 
 /** This runs when running the script */
-//console.log("Debugging for get_lego_set");
-//const myEmbed = lookUpAndReturnSet(4444);
+console.log("Debugging for get_lego_set");
+const myEmbed = lookUpAndReturnSet(4444);
