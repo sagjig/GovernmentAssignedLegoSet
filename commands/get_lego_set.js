@@ -28,7 +28,6 @@ module.exports = {
     },
 };
 
-// TODO: Pull HTML page and embed stuff you need in it so it can be returned to the execution process.
 // TODO: Genericize this method so it can work with sets, parts, and whatever other page followign that specific format
 /**
  * Returns a Discord embed of a Brickset page, given a set-number
@@ -49,7 +48,7 @@ async function lookUpAndReturnSet(set_number){
     }
 
     if (response.data.status == "error") {
-        throw new Error(response.data.message);
+        throw new Error("Backend API error: " + response.data.message);
     }
 
     returned_set_title = getPropertyIfExists("number",response.data.sets[0]) +" "+ getPropertyIfExists("name",response.data.sets[0]);
