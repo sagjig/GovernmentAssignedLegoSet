@@ -39,6 +39,8 @@ async function lookUpAndReturnSet(set_number) {
     var response = null;
     const endpoint = "https://brickset.com/api/v3.asmx/getSets";
 
+    // Remove leading 0s from set_number, if applicable
+    set_number = parseInt(set_number, 10).toString();
 
 
     const combo = endpoint + "?apiKey=" + bricksetAPIKey + "&userHash=" + "&params=%7B%22setNumber%22%3A%20%22" + set_number + "-1" + "%22%7D";
