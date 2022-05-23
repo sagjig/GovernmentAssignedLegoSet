@@ -50,6 +50,6 @@ for (const file of filesInCommandsDirectory){
 
 const rest = new REST({version: '10'}).setToken(token); 
 
-rest.put(Routes.applicationGuildCommands(client_id, guild_id), {body: commands}) //register all application commands
+rest.put(Routes.applicationCommands(client_id), {body: commands}) //register all application commands
 .then(() => console.log("\nRegistered all application commands")) //Then, log it to the console
 .catch(console.error); //...and catch any errors
