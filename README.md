@@ -1,10 +1,7 @@
 # GovernmentAssignedLegoSet
 A Discord bot that pulls LEGO set information from Brickset.
 
+Add it to your server with [this link](https://discord.com/api/oauth2/authorize?client_id=975839414523658280&permissions=2147534848&scope=bot).
 
-# Deployment
-1.) Get an API Key for Brickset, and create a bot with application ID over Discord.
 
-2.) Put these keys in a file called auth.js in the root folder.
-
-3.) Run `npm run test` or just run `node ./index.js`.
+Please see the "Wiki" tab for information on commands or on deploying your own instance.
